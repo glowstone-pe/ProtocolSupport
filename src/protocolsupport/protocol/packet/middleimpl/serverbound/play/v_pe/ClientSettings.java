@@ -14,11 +14,14 @@ public class ClientSettings extends MiddleClientSettings {
 	@Override
 	public void readFromClientData(ByteBuf clientdata) {
 		locale = cache.getLocale();
-		viewDist = (VarNumberSerializer.readSVarInt(clientdata) - 1);
+		int fromClient = VarNumberSerializer.readSVarInt(clientdata);
+		System.err.println("View-Distance From clinet: " + fromClient + " server: " + Bukkit.getViewDistance());
+		viewDist = (byte) (fromClient - 1);
 		chatMode = 0;
 		chatColors = true;
-		skinFlags = 0x7F;
-		mainHand = 0;
+		skinFlags = 255;
+		mainHand = 1;
+		System.err.println("Sending to client: " + ((viewDist > Bukkit.getViewDistance()) ? (Bukkit.getViewDistance() + 1) : (viewDist + 1)));
 		sendResponse();
 	}
 	
